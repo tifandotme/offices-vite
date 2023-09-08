@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply mx-auto mt-[10rem] min-h-screen max-w-[19.875rem] bg-lightgrey text-darkblue antialiased tracking-wide;
+
+    font-family: "Roboto", sans-serif;
+  }
+
+  :root {
+    --blue: 189 57% 46%;
+    --red: 350 100% 74%;
+
+    --darkblue: 214 23% 25%;
+    --grey: 216 8% 63%;
+    --lightgrey: 213 31% 93%;
+  }
+}
