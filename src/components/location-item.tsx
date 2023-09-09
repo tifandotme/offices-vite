@@ -4,9 +4,8 @@ import * as Collapsible from "@radix-ui/react-collapsible"
 import { DATA, deleteOffice, OfficesResponse } from "@/lib/mock-adapter"
 import { cn, queryClient } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
-import { ArrowIcon, PencilIcon, TrashIcon } from "@/components/ui/icons"
-
 import { EditForm } from "@/components/edit-form"
+import { ArrowIcon, PencilIcon, TrashIcon } from "@/components/ui/icons"
 
 export function LocationItem({
   data,
@@ -42,7 +41,7 @@ export function LocationItem({
           <Collapsible.Trigger asChild>
             <button
               className={cn(
-                "border-of flex w-full items-center justify-between rounded-lg p-6 transition-colors duration-300 ease-out data-[state=open]:rounded-b-none",
+                "flex w-full items-center justify-between rounded-lg p-6 shadow-of transition-colors duration-300 ease-out data-[state=open]:rounded-b-none",
 
                 expanded ? "bg-grey text-white" : "bg-white",
               )}
@@ -64,7 +63,7 @@ export function LocationItem({
               />
             </button>
           </Collapsible.Trigger>
-          <Collapsible.Content className="overflow-hidden data-[state=closed]:animate-[slideUp_300ms_ease-out] data-[state=open]:animate-[slideDown_300ms_ease-out]">
+          <Collapsible.Content className="overflow-hidden shadow-of data-[state=closed]:animate-[slideUp_300ms_ease-out] data-[state=open]:animate-[slideDown_300ms_ease-out]">
             <div className="inline-flex w-full flex-col gap-2 rounded-b-lg bg-white px-8 py-6">
               <span className="text-xl font-bold leading-[150%] text-darkblue">
                 {data.detail.fullname}
