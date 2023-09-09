@@ -1,28 +1,50 @@
 import { useForm } from "react-hook-form"
+import { v4 as uuid } from "uuid"
 
-import { type LocationForms } from "@/types"
+import { addOffice, AddOfficeBody, DATA } from "@/lib/mock-adapter"
+import { queryClient } from "@/lib/utils"
+import { useToast } from "@/hooks/use-toast"
 import { CloseIcon } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 
-export function LocationForm({
-  onClose,
-}: {
-  onClose: React.MouseEventHandler<HTMLButtonElement>
-}) {
+export function AddForm({ onClose }: { onClose: () => void }) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<LocationForms>()
+    formState: { errors, isSubmitting },
+  } = useForm<AddOfficeBody>()
 
-  const onSubmit = (data: LocationForms) => {
-    console.log(data)
+  const toast = useToast()
+
+  const onSubmit = async (data: AddOfficeBody) => {
+    const { title, address, email, fullname, job, phone } = data
+
+    const res = await addOffice(data)
+    if (res.code !== 200) return
+
+    DATA.push({
+      id: uuid(),
+      title,
+      address,
+      detail: {
+        email,
+        fullname,
+        job,
+        phone,
+      },
+    })
+
+    toast(res.message)
+
+    await queryClient.invalidateQueries({ queryKey: ["officeData"] })
+
+    onClose()
   }
 
   return (
     <div className="rounded-lg bg-white">
       <div className="flex items-center justify-between px-6 py-4 leading-6">
-        <span className="font-bold text-darkblue">New Location</span>
+        <span className="font-bold text-darkblue">Add location</span>
         <button onClick={onClose}>
           <CloseIcon className="text-grey" />
         </button>
@@ -49,14 +71,22 @@ export function LocationForm({
           error={errors.address?.message}
           {...register("address", { required: "This field cannot be empty" })}
         />
+
+        <div className="inline-flex flex-col gap-4">
+          <span className="inline-flex h-[1.4375rem] items-end text-xs uppercase tracking-[0.015rem] text-blue">
+            Contact Information
+          </span>
+          <hr />
+        </div>
+
         <Input
           label="Full name"
           id="name"
           type="text"
           placeholder="John Doe"
           required
-          error={errors.name?.message}
-          {...register("name", { required: "This field cannot be empty" })}
+          error={errors.fullname?.message}
+          {...register("fullname", { required: "This field cannot be empty" })}
         />
         <Input
           label="Job position"
@@ -64,8 +94,8 @@ export function LocationForm({
           type="text"
           placeholder="Carpenter"
           required
-          error={errors.occupation?.message}
-          {...register("occupation", {
+          error={errors.job?.message}
+          {...register("job", {
             required: "This field cannot be empty",
           })}
         />
@@ -87,12 +117,16 @@ export function LocationForm({
           error={errors.phone?.message}
           {...register("phone", { required: "This field cannot be empty" })}
         />
-        <button
-          className="self-start rounded-[0.25rem] bg-blue px-4 py-2 text-white"
-          type="submit"
-        >
-          Save
-        </button>
+        <div className="inline-flex items-center gap-4">
+          <button
+            className="self-start rounded-[0.25rem] bg-blue px-4 py-2 text-white"
+            type="submit"
+          >
+            Save
+          </button>
+
+          {isSubmitting && <span>Loading...</span>}
+        </div>
       </form>
     </div>
   )

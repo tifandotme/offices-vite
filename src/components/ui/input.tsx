@@ -1,8 +1,7 @@
 import React from "react"
 
 import { cn } from "@/lib/utils"
-
-import { ExclamationCircleIcon } from "./icons"
+import { ExclamationCircleIcon } from "@/components/ui/icons"
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -28,7 +27,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       />
       {error && (
         <>
-          <span className="pointer-events-none absolute inset-y-0 end-0 mr-[6px] mt-[6px]  flex items-center">
+          <span className="pointer-events-none absolute inset-y-0 end-0 mr-[7px] mt-[6px]  flex items-center">
             <ExclamationCircleIcon className="text-red" />
           </span>
 

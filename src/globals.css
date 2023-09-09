@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply mx-auto mt-[10rem] min-h-screen max-w-[19.875rem] bg-lightgrey text-darkblue antialiased tracking-wide;
+    @apply mx-auto my-[10rem] min-h-screen max-w-[19.875rem] bg-lightgrey text-darkblue antialiased tracking-wide;
 
     font-family: "Roboto", sans-serif;
   }
