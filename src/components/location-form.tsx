@@ -8,7 +8,7 @@ import {
   updateOffice,
   type OfficesResponse,
 } from "@/lib/mock-adapter"
-import { queryClient } from "@/lib/utils"
+import { cn, queryClient } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { CloseIcon } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
@@ -167,7 +167,13 @@ export function LocationForm({
         />
         <div className="inline-flex items-center gap-4">
           <button
-            className="self-start rounded-[0.25rem] bg-blue px-4 py-2 text-white"
+            className={cn(
+              "select-none self-start rounded-[0.25rem] bg-blue px-4 py-2 text-white",
+
+              isSubmitting && "pointer-events-none",
+
+              Object.keys(errors).length > 0 && "pointer-events-none bg-grey",
+            )}
             type="submit"
           >
             Save
