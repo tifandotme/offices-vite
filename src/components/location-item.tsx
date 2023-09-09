@@ -4,7 +4,7 @@ import * as Collapsible from "@radix-ui/react-collapsible"
 import { DATA, deleteOffice, OfficesResponse } from "@/lib/mock-adapter"
 import { cn, queryClient } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
-import { EditForm } from "@/components/edit-form"
+import { LocationForm } from "@/components/location-form"
 import { ArrowIcon, PencilIcon, TrashIcon } from "@/components/ui/icons"
 
 export function LocationItem({
@@ -35,7 +35,7 @@ export function LocationItem({
   return (
     <>
       {open ? (
-        <EditForm data={data} onClose={() => setOpen(false)} />
+        <LocationForm action="edit" data={data} onClose={() => setOpen(false)} />
       ) : (
         <Collapsible.Root open={expanded} onOpenChange={setExpanded}>
           <Collapsible.Trigger asChild>

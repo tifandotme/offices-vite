@@ -1,13 +1,27 @@
 import { useForm } from "react-hook-form"
 import { v4 as uuid } from "uuid"
 
-import { addOffice, AddOfficeBody, DATA } from "@/lib/mock-adapter"
+import {
+  addOffice,
+  AddOfficeBody,
+  DATA,
+  updateOffice,
+  type OfficesResponse,
+} from "@/lib/mock-adapter"
 import { queryClient } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { CloseIcon } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 
-export function AddForm({ onClose }: { onClose: () => void }) {
+export function LocationForm({
+  action,
+  data,
+  onClose,
+}: {
+  action: "add" | "edit"
+  data?: OfficesResponse["data"][number]
+  onClose: () => void
+}) {
   const {
     register,
     handleSubmit,
@@ -16,24 +30,45 @@ export function AddForm({ onClose }: { onClose: () => void }) {
 
   const toast = useToast()
 
-  const onSubmit = async (data: AddOfficeBody) => {
-    const { title, address, email, fullname, job, phone } = data
+  const onSubmit = async (newData: AddOfficeBody) => {
+    const { title, address, email, fullname, job, phone } = newData
 
-    const res = await addOffice(data)
+    if (action === "edit" && data) {
+      const res = await updateOffice("1", newData) // data.id
 
-    DATA.push({
-      id: uuid(),
-      title,
-      address,
-      detail: {
-        email,
-        fullname,
-        job,
-        phone,
-      },
-    })
+      const index = DATA.findIndex((item) => item.id === data.id)
+      if (index === -1) return
 
-    toast(res.message)
+      DATA[index] = {
+        id: data.id,
+        title,
+        address,
+        detail: {
+          email,
+          fullname,
+          job,
+          phone,
+        },
+      }
+
+      toast(res.message)
+    } else {
+      const res = await addOffice(newData)
+
+      DATA.push({
+        id: uuid(),
+        title,
+        address,
+        detail: {
+          email,
+          fullname,
+          job,
+          phone,
+        },
+      })
+
+      toast(res.message)
+    }
 
     await queryClient.invalidateQueries({ queryKey: ["officeData"] })
 
@@ -43,7 +78,9 @@ export function AddForm({ onClose }: { onClose: () => void }) {
   return (
     <div className="rounded-lg bg-white">
       <div className="flex items-center justify-between px-6 py-4 leading-6">
-        <span className="font-bold text-darkblue">Add location</span>
+        <span className="font-bold text-darkblue">
+          {action === "add" ? "Add" : "Edit"} location
+        </span>
         <button onClick={onClose}>
           <CloseIcon className="text-grey" />
         </button>
@@ -58,6 +95,7 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           type="text"
           placeholder="Headquarters"
           required
+          defaultValue={data?.title}
           error={errors.title?.message}
           {...register("title", { required: "This field cannot be empty" })}
         />
@@ -67,6 +105,7 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           type="text"
           placeholder="3763 W. Dallas St."
           required
+          defaultValue={data?.address}
           error={errors.address?.message}
           {...register("address", { required: "This field cannot be empty" })}
         />
@@ -84,6 +123,7 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           type="text"
           placeholder="John Doe"
           required
+          defaultValue={data?.detail.fullname}
           error={errors.fullname?.message}
           {...register("fullname", { required: "This field cannot be empty" })}
         />
@@ -92,6 +132,7 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           id="occupation"
           type="text"
           required
+          defaultValue={data?.detail.job}
           error={errors.job?.message}
           {...register("job", {
             required: "This field cannot be empty",
@@ -103,8 +144,16 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           type="email"
           placeholder="name@example.com"
           required
+          defaultValue={data?.detail.email}
           error={errors.email?.message}
-          {...register("email", { required: "This field cannot be empty" })}
+          {...register("email", {
+            required: "This field cannot be empty",
+            setValueAs: (value: string) => value.toLowerCase().trim(),
+            pattern: {
+              value: /\S+@\S+\.\S+/,
+              message: "Invalid email address",
+            },
+          })}
         />
         <Input
           label="Phone"
@@ -112,6 +161,7 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           type="tel"
           placeholder="(xxx) xxx-xxxx"
           required
+          defaultValue={data?.detail.phone}
           error={errors.phone?.message}
           {...register("phone", { required: "This field cannot be empty" })}
         />
