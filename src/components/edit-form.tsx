@@ -29,8 +29,7 @@ export function EditForm({
   const onSubmit = async (newData: AddOfficeBody) => {
     const { title, address, email, fullname, job, phone } = newData
 
-    const res = await updateOffice(data.id, newData)
-    if (res.code !== 200) return
+    const res = await updateOffice("1", newData) // data.id
 
     const index = DATA.findIndex((item) => item.id === data.id)
     if (index === -1) return
@@ -70,7 +69,6 @@ export function EditForm({
           label="Title"
           id="title"
           type="text"
-          placeholder="Headquarter"
           defaultValue={data.title}
           error={errors.title?.message}
           {...register("title")}
@@ -79,7 +77,6 @@ export function EditForm({
           label="Enter the address"
           id="address"
           type="text"
-          placeholder="3832 Sdasj Street"
           defaultValue={data.address}
           error={errors.address?.message}
           {...register("address")}
@@ -96,7 +93,6 @@ export function EditForm({
           label="Full name"
           id="name"
           type="text"
-          placeholder="John Doe"
           defaultValue={data.detail.fullname}
           error={errors.fullname?.message}
           {...register("fullname")}
@@ -105,7 +101,6 @@ export function EditForm({
           label="Job position"
           id="occupation"
           type="text"
-          placeholder="Carpenter"
           defaultValue={data.detail.job}
           error={errors.job?.message}
           {...register("job")}
@@ -114,7 +109,6 @@ export function EditForm({
           label="Email"
           id="email"
           type="email"
-          placeholder="name@example.com"
           defaultValue={data.detail.email}
           error={errors.email?.message}
           {...register("email")}
@@ -123,7 +117,6 @@ export function EditForm({
           label="Phone"
           id="phone"
           type="tel"
-          placeholder="(xxx) xxx-xxxx"
           defaultValue={data.detail.phone}
           error={errors.phone?.message}
           {...register("phone")}

@@ -18,7 +18,7 @@ export function LocationItem({
   const toast = useToast()
 
   const handleDelete = async () => {
-    const res = await deleteOffice(data.id)
+    const res = await deleteOffice("1") // data.id
 
     if (res.code !== 200) return
 

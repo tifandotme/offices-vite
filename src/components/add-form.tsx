@@ -20,7 +20,6 @@ export function AddForm({ onClose }: { onClose: () => void }) {
     const { title, address, email, fullname, job, phone } = data
 
     const res = await addOffice(data)
-    if (res.code !== 200) return
 
     DATA.push({
       id: uuid(),
@@ -57,7 +56,7 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           label="Title"
           id="title"
           type="text"
-          placeholder="Headquarter"
+          placeholder="Headquarters"
           required
           error={errors.title?.message}
           {...register("title", { required: "This field cannot be empty" })}
@@ -66,7 +65,7 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           label="Enter the address"
           id="address"
           type="text"
-          placeholder="3832 Sdasj Street"
+          placeholder="3763 W. Dallas St."
           required
           error={errors.address?.message}
           {...register("address", { required: "This field cannot be empty" })}
@@ -92,7 +91,6 @@ export function AddForm({ onClose }: { onClose: () => void }) {
           label="Job position"
           id="occupation"
           type="text"
-          placeholder="Carpenter"
           required
           error={errors.job?.message}
           {...register("job", {
